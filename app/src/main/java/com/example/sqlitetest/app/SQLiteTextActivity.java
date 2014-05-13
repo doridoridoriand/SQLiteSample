@@ -36,7 +36,7 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
 
     static DBAdapter dbAdapter;
     static NoteListAdapter listAdapter;
-    static List<ContactsContract.CommonDataKinds.Note> noteList = new ArrayList<ContactsContract.CommonDataKinds.Note>();
+    static List<Note> noteList = new ArrayList<Note>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
 
         dbAdapter = new DBAdapter(this);
         listAdapter = new NoteListAdapter();
-        itemListView.setAdaptger(listAdapter);
+        itemListView.setAdapter(listAdapter);
 
         loadNote();
     }
@@ -68,10 +68,9 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
         if(c.moveToFirst()){
             do {
                 Note note = new Note(
-                c.getColumnIndex(DBAdapter.COL_ID)),
+                c.getInt(c.getColumnIndex(DBAdapter.COL_ID)),
                 c.getString(c.getColumnIndex(DBAdapter.COL_NOTE)),
-                c.getString(c.getColumnIndex(DBAdapter.COL_LASTUPDATE))
-                );
+                c.getString(c.getColumnIndex(DBAdapter.COL_LASTUPDATE)));
                 noteList.add(note);
             } while(c.moveToNext());
         }
@@ -96,7 +95,7 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
         itemListView.setOnCreateContextMenuListener(
                 new View.OnCreateContextMenuListener() {
                     @Override
-                    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+                    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                         menu.add(0, MENUITEM_ID_DELETE, 0, "Delete");
                     }
                 });
@@ -122,7 +121,7 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
                                 public void onClick(DialogInterface dialog, int which) {
                                         dbAdapter.open();
                                         if(dbAdapter.deleteNote(noteId)) {
-                                            Toast.makeText(getBaseContext("The note was successfully deleted"),Toast.LENGTH_SHORT);
+                                            Toast.makeText(getBaseContext(),"The note was successfully deleted",Toast.LENGTH_SHORT);
                                             loadNote();
                                         }
                                         dbAdapter.close();
@@ -144,10 +143,10 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
         }
     }
 
-    private NoteListAdapter extends BaseAdapter {
+    private class NoteListAdapter extends BaseAdapter {
 
         @Override
-        public int getCout() {
+        public int getCount() {
             return noteList.size();
         }
 
@@ -169,7 +168,7 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
 
             if(v == null) {
                 LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = inflater.inflate(R.layout.row, unll);
+                v = inflater.inflate(R.layout.row, null);
             }
             Note note = (Note)getItem(position);
             if(note != null) {
@@ -177,7 +176,7 @@ public class SQLiteTextActivity extends Activity implements View.OnClickListener
                 lastupdateTextView = (TextView)v.findViewById(R.id.lastupdateTextView);
                 noteTextView.setText(note.getNOte());
                 lastupdateTextView.setText(note.getLastupdate());
-                v.setTag(R.id.noteId, note);
+                v.setTag(R.id.noteTextView, note);
             }
             return v;
         }

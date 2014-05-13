@@ -70,7 +70,7 @@ public class DBAdapter {
     }
 
     public void saveNote(String note) {
-        Date dateNow = New Date =();
+        Date dateNow = new Date();
         ContentValues values = new ContentValues();
         values.put(COL_NOTE, note);
         values.put(COL_LASTUPDATE, dateNow.toLocaleString());
