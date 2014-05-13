@@ -24,7 +24,6 @@ local.properties
 .apt_generated/
 
 #
-.idea/
 *.iml
 *.ipr
 *.iws
