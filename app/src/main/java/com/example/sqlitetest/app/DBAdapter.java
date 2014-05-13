@@ -38,7 +38,22 @@ public class DBAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE" + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_NOTE + " TEXT NOT NULL," + COL_LASTUPDATE + " TEXT NOT NULL);");
+            StringBuilder sqlset = new StringBuilder();
+            String sqlstring = null;
+
+            sqlset.append("CREATE TABLE ");
+            sqlset.append(TABLE_NAME);
+            sqlset.append(" ( ");
+            sqlset.append(COL_ID);
+            sqlset.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sqlset.append(COL_NOTE);
+            sqlset.append(" TEXT NOT NULL, ");
+            sqlset.append(COL_LASTUPDATE);
+            sqlset.append(" TEXT NOT NULL ) ");
+
+            sqlstring = sqlset.toString();
+
+            db.execSQL(sqlstring);
         }
 
         @Override
